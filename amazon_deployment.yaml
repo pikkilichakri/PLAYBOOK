@@ -1,0 +1,44 @@
+---
+- name: Deploy Amazon clone with Ansible
+  hosts: localhost
+  become: yes
+  connection: local
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Clone the Amazon clone repository
+      git:
+        repo: https://github.com/Ironhack-Archive/online-clone-amazon.git
+        dest: /tmp/online-clone-amazon
+        version: master
+
+    - name: Copy application files to Apache web root
+      copy:
+        src: /tmp/online-clone-amazon/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      notify:
+        - Restart Apache
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+
+
