@@ -1,6 +1,6 @@
 ---
 - name: Deploy Amazon clone with Ansible
-  hosts: localhost
+  hosts: dev
   become: yes
   connection: local
 
